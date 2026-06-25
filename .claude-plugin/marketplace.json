@@ -1,0 +1,18 @@
+{
+  "name": "htmx-skills",
+  "description": "Agent skill for building hypermedia-driven UIs with htmx",
+  "owner": {
+    "name": "Constantinos Pigiotis"
+  },
+  "plugins": [
+    {
+      "name": "htmx",
+      "description": "Build interactive web UIs with htmx by adding hypermedia attributes to HTML and returning HTML fragments from the server.",
+      "version": "1.0.0",
+      "source": "./",
+      "author": {
+        "name": "Constantinos Pigiotis"
+      }
+    }
+  ]
+}

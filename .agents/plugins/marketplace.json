@@ -1,0 +1,21 @@
+{
+  "name": "htmx-skills",
+  "interface": {
+    "displayName": "htmx Skills"
+  },
+  "plugins": [
+    {
+      "name": "htmx",
+      "description": "Build interactive web UIs with htmx — hypermedia attributes, HTML fragment swaps, OOB updates, extensions, and server-driven UI patterns.",
+      "category": "Development",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "NONE"
+      }
+    }
+  ]
+}

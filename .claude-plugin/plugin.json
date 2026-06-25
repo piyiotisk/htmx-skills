@@ -1,0 +1,20 @@
+{
+  "name": "htmx",
+  "description": "Build interactive web UIs with htmx by adding hypermedia attributes to HTML and returning HTML fragments from the server.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Constantinos Pigiotis"
+  },
+  "homepage": "https://github.com/piyiotisk/htmx-skills",
+  "repository": "https://github.com/piyiotisk/htmx-skills",
+  "license": "MIT",
+  "keywords": [
+    "htmx",
+    "hypermedia",
+    "html",
+    "frontend",
+    "hx-get",
+    "hx-post",
+    "hx-swap"
+  ]
+}

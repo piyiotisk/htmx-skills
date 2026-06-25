@@ -1,0 +1,47 @@
+{
+  "skill_name": "htmx",
+  "evals": [
+    {
+      "id": 0,
+      "name": "active-search",
+      "prompt": "I'm building a user directory page. I want a search box at the top that hits my server endpoint GET /users/search as the person types and shows the matching results in a list below, without a page reload. It shouldn't fire a request on every keystroke (that hammers my server), and I'd like some kind of loading indicator while it's fetching. Give me the HTML for the search input and results area, and briefly explain the key attributes. I'm already loading htmx on the page.",
+      "expected_output": "An htmx active-search snippet: an input with hx-get=\"/users/search\", a debounced hx-trigger (keyup changed delay:NNNms), hx-target pointing at the results container, and a loading indicator using the htmx-indicator class (or hx-indicator).",
+      "files": [],
+      "expectations": [
+        "Uses hx-get pointing at /users/search (the input issues the request)",
+        "hx-trigger uses a keyup/input event with a delay debounce modifier (e.g. delay:300ms) to avoid firing on every keystroke",
+        "hx-trigger includes the 'changed' modifier so unchanged values don't re-request",
+        "hx-target points at the results container element that exists in the HTML",
+        "Includes a loading indicator using the htmx-indicator class or hx-indicator attribute",
+        "The input has a name attribute so the query is sent as a request parameter"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "oob-like-button",
+      "prompt": "I have a 'Like' button on a post that posts to /posts/42/like via htmx and swaps itself with the updated button. But I also have a separate total-likes counter badge in the page header (it has id=\"like-count\") that I want to update at the same time, from the same request, without making a second request. How should the button be set up and what should my server return? I'm using Flask with Jinja templates.",
+      "expected_output": "Explanation of out-of-band swaps: the button swaps normally (its own target), and the response also includes the #like-count element marked with hx-swap-oob=\"true\" so htmx swaps it into place by id in the same response.",
+      "files": [],
+      "expectations": [
+        "Identifies out-of-band (OOB) swaps as the mechanism for updating a second element from one response",
+        "Shows hx-swap-oob=\"true\" (or hx-swap-oob with a value) on the like-count element in the server response",
+        "The OOB element in the response has id=\"like-count\" matching the existing DOM element",
+        "Explains that the button content swaps via the normal target while the OOB element is swapped separately by id",
+        "Does NOT propose making a second/separate HTTP request to update the counter"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "validation-422",
+      "prompt": "My signup form uses hx-post=\"/signup\" and hx-target=\"#form-container\". When validation fails, my server responds with HTTP 422 and re-renders the form HTML including the inline error messages. The problem is htmx just ignores the 422 response and nothing gets swapped in, so the user never sees the errors. The 200 success case works fine. Why is this happening and how do I fix it so the 422 error HTML gets swapped in?",
+      "expected_output": "Explanation that htmx by default does not swap 4xx/5xx responses (only 2xx/3xx), so the 422 body is ignored. Fix: reconfigure response handling so 422 swaps - via htmx.config.responseHandling (meta tag or JS), the response-targets extension, or an htmx:beforeSwap handler setting shouldSwap=true.",
+      "files": [],
+      "expectations": [
+        "Correctly diagnoses that htmx does not swap 4xx/5xx responses by default (only 2xx/3xx are swapped)",
+        "Provides a concrete fix that makes the 422 response swap into the target",
+        "The fix uses a valid htmx mechanism: htmx.config.responseHandling, the response-targets extension, OR an htmx:beforeSwap handler that sets evt.detail.shouldSwap = true",
+        "If using responseHandling, the configuration keeps 2xx/3xx swapping and adds 422 as swappable (does not break the working success case)"
+      ]
+    }
+  ]
+}

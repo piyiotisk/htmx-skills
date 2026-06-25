@@ -1,0 +1,42 @@
+{
+  "skill_name": "htmx",
+  "note": "Iteration 2 - harder, less-common tasks intended to discriminate skill value (deep attribute/extension/header knowledge).",
+  "evals": [
+    {
+      "id": 0,
+      "name": "hx-sync-abort",
+      "prompt": "On a form (hx-post=\"/save\") I have a text input that validates itself with hx-post=\"/validate\" on the change event. If the user edits the field and immediately hits Submit, both requests fire and race each other. I want the input's in-flight validation request to be cancelled whenever the form submits, declaratively in htmx with no custom JavaScript. How do I wire this up?",
+      "expected_output": "Use hx-sync on the input set to coordinate with the enclosing form, e.g. hx-sync=\"closest form:abort\", so the input's request is aborted when the form's request starts/exists.",
+      "expectations": [
+        "Recommends the hx-sync attribute as the declarative mechanism",
+        "Syncs against the enclosing form (e.g. selector 'closest form')",
+        "Uses the abort strategy (hx-sync=\"closest form:abort\") so the input's request is aborted when the form request is present/starts",
+        "Solution requires no custom JavaScript"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "history-caching-vary",
+      "prompt": "My Flask app renders full pages on normal requests, but when the HX-Request header is present it returns only a partial fragment. Nav links use hx-get with hx-push-url=\"true\". Two bugs: (1) when a user copies a pushed URL into a new tab, or hits Back after the history cache has expired, they sometimes get a bare partial instead of the full page; (2) a CDN/browser sometimes serves the cached partial fragment for a normal full-page visit to the same URL. How do I make history restoration and caching correct?",
+      "expected_output": "Pushed URLs must return a full page on direct/restore requests; htmx marks restore requests (HX-History-Restore-Request) and you should distinguish full vs partial server-side, ideally disabling htmx.config.historyRestoreAsHxRequest so HX-Request reliably signals 'return a partial'. Add Vary: HX-Request so caches don't mix partial and full responses for the same URL (or use getCacheBusterParam).",
+      "expectations": [
+        "States that a pushed (hx-push-url) URL must be able to return the FULL page when visited directly or restored",
+        "Recommends the 'Vary: HX-Request' response header (or getCacheBusterParam) to stop caches mixing partial and full responses for the same URL",
+        "Uses request headers server-side to distinguish request types (HX-Request and/or HX-History-Restore-Request)",
+        "References history-restore handling correctly (e.g. htmx.config.historyRestoreAsHxRequest, or HX-History-Restore-Request) so restore requests get the full page"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "sse-live-feed",
+      "prompt": "I want a live activity feed in htmx 2: my server pushes events over Server-Sent Events at the endpoint /events, and each 'message' event should append a new <li> to a list with id=\"feed\" (items should accumulate, not replace). How do I set this up with htmx?",
+      "expected_output": "Use the htmx SSE extension: load htmx-ext-sse, enable with hx-ext=\"sse\", open the stream with sse-connect=\"/events\", select the event with sse-swap=\"message\", and append with hx-swap=\"beforeend\".",
+      "expectations": [
+        "Uses the htmx SSE extension (enables hx-ext=\"sse\" AND loads the sse extension script/package, not just core htmx)",
+        "Opens the stream with sse-connect=\"/events\" (correct htmx 2 SSE attribute, not the old hx-sse syntax)",
+        "Selects the event to swap with sse-swap=\"message\"",
+        "Appends items with hx-swap=\"beforeend\" (or equivalent) so the list accumulates instead of being replaced"
+      ]
+    }
+  ]
+}

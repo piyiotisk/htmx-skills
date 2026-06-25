@@ -1,0 +1,10 @@
+# Dev / eval artifacts (not shipped as plugin)
+.cursor/skills/htmx-workspace/
+.playwright-mcp/
+
+# OS
+.DS_Store
+
+# Editor
+*.swp
+*.swo

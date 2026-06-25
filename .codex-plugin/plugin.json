@@ -1,0 +1,27 @@
+{
+  "name": "htmx",
+  "version": "1.0.0",
+  "description": "Build interactive web UIs with htmx — hypermedia attributes, HTML fragment swaps, OOB updates, extensions, and server-driven UI patterns.",
+  "author": {
+    "name": "Constantinos Pigiotis"
+  },
+  "homepage": "https://github.com/piyiotisk/htmx-skills",
+  "repository": "https://github.com/piyiotisk/htmx-skills",
+  "license": "MIT",
+  "keywords": [
+    "htmx",
+    "hypermedia",
+    "html",
+    "frontend"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "htmx",
+    "shortDescription": "Hypermedia-driven UI development with htmx",
+    "category": "Development",
+    "defaultPrompt": [
+      "Use the htmx skill to add hx-get/hx-post interactions with correct targets and swaps.",
+      "Use the htmx skill to review this template for OOB swaps and progressive enhancement."
+    ]
+  }
+}

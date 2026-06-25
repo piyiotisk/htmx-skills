@@ -1,0 +1,97 @@
+{
+  "skill_name": "htmx",
+  "note": "Expert edge cases: response-targets, inheritance, OOB templates, idiomorph morph swap, head-support, HX-Location redirects.",
+  "evals": [
+    {
+      "id": 0,
+      "name": "response-targets-422-split",
+      "prompt": "I have a signup form with hx-post=\"/signup\" and hx-target=\"#success-panel\". On success (HTTP 200) the server returns a short 'Welcome!' message that should appear in #success-panel. On validation failure (HTTP 422) the server returns the re-rendered form HTML with inline field errors — but that HTML must go into #form-container (where the form lives), NOT into #success-panel. Right now the 422 body is ignored entirely and nothing updates. I want the idiomatic htmx 2 solution that routes 200 and 422 responses to different swap targets declaratively on the form element. What do I wire up (client HTML + any extension scripts)?",
+      "expected_output": "Enable the response-targets extension (load htmx-ext-response-targets, hx-ext=\"response-targets\" on a parent). Keep hx-target=\"#success-panel\" for 200 responses and add hx-target-422=\"#form-container\" so validation HTML swaps into the form area. Optionally note responseHandling as an alternative but response-targets is the right fit for different targets per status.",
+      "expectations": [
+        "Correctly diagnoses that htmx ignores 4xx responses by default (422 body is not swapped without configuration)",
+        "Uses the response-targets extension (loads the extension script AND enables hx-ext=\"response-targets\", not core htmx alone)",
+        "Sets hx-target-422 to #form-container (or equivalent) so validation HTML swaps into the form container",
+        "Keeps hx-target=\"#success-panel\" (or equivalent) for the 200 success case — two different targets for two status codes",
+        "Does not recommend returning HTTP 200 for validation failures as the primary fix"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "boost-disinherit-island",
+      "prompt": "My app layout has hx-boost=\"true\" hx-target=\"#main\" hx-select=\".page-content\" on the <body>, so normal nav links swap partials into #main. Two problems inside #main: (1) a 'Downloads' sidebar has links to /static/handbook.pdf and /static/api-guide.pdf that must trigger full browser navigation (open/download the PDF), not AJAX partial swaps; (2) a contacts table has per-row Delete buttons (hx-delete) that must swap only the closest <tr> (hx-target=\"closest tr\", hx-swap=\"outerHTML\"), but they keep inheriting hx-target=\"#main\" from body so the whole main pane gets replaced. How do I fix both issues declaratively with htmx inheritance controls — no custom JavaScript?",
+      "expected_output": "Use hx-disinherit on the downloads section (e.g. hx-disinherit=\"*\" with hx-boost=\"unset\" on PDF links, or disinherit hx-boost only) so PDF links are not boosted. For the table, put hx-disinherit=\"hx-target\" (or \"*\") on the table/tbody so row buttons' hx-target=\"closest tr\" is not overridden by inherited #main from body.",
+      "expectations": [
+        "Identifies htmx attribute inheritance from body as the cause of wrong targets / unwanted boosting",
+        "Uses hx-disinherit on the downloads/PDF section (e.g. hx-disinherit=\"*\" or disinherit hx-boost) so PDF links are not AJAX-boosted",
+        "Uses hx-boost=\"unset\" (or equivalent) on the PDF links so they perform full browser navigation",
+        "Uses hx-disinherit (e.g. hx-disinherit=\"hx-target\" or \"*\") on the table/tbody so row delete buttons can use hx-target=\"closest tr\" without inheriting #main",
+        "Row delete buttons specify hx-target=\"closest tr\" with an appropriate swap (outerHTML or delete)"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "oob-delete-row-template",
+      "prompt": "Contacts table: each row has a Delete button (hx-delete=\"/contacts/5\" etc.) that should remove that <tr>. I also have <span id=\"contact-count\">42</span> in the page header showing total contacts — it must update in the same response when a row is deleted, with no second request. My Flask view returns HTTP 200 with an empty body for the row removal plus the updated count markup. The delete works in isolation but the OOB count never updates, and when I try returning a raw <tr> in the response for OOB I get parser errors. What's the correct button markup, and what should the server response look like?",
+      "expected_output": "Button inherits or sets hx-target=\"closest tr\" hx-swap=\"delete\" (or outerHTML). Response includes <span id=\"contact-count\" hx-swap-oob=\"true\">new count</span>. Because tr/td cannot be bare roots in HTML, wrap OOB table fragments in <template>...</template> per htmx OOB rules.",
+      "expectations": [
+        "Uses out-of-band (OOB) swap to update #contact-count from the same DELETE response",
+        "Response includes an element with id=\"contact-count\" and hx-swap-oob (true or innerHTML/outerHTML)",
+        "Explains that <tr>/<td> OOB fragments must be wrapped in <template> (HTML parsing constraint)",
+        "Delete button targets closest tr (inherited on tbody or explicit) with delete or outerHTML swap for row removal",
+        "Does not propose a second HTTP request to refresh the counter"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "idiomorph-inline-edit",
+      "prompt": "I have a click-to-edit contact card: a div shows name/email read-only, clicking Edit does hx-get=\"/contact/1/edit\" with hx-target=\"this\" hx-swap=\"outerHTML\" to swap in a form with text inputs. It works, but every swap destroys and recreates the DOM — the cursor jumps, focused inputs lose caret position, and there's visible flicker when toggling edit/view. I want htmx to update the markup while preserving as much of the existing DOM as possible (especially focus in the active input). What's the htmx 2 approach?",
+      "expected_output": "Load the idiomorph extension (idiomorph-ext script), enable hx-ext=\"morph\" on an ancestor, and use hx-swap=\"morph\" or morph:outerHTML (or morph:innerHTML) instead of plain outerHTML/innerHTML so matching nodes are reused and focus is preserved.",
+      "expectations": [
+        "Identifies that default innerHTML/outerHTML swaps replace the DOM and cause focus/cursor loss",
+        "Uses the idiomorph extension (loads the idiomorph/idiomorph-ext script AND enables hx-ext=\"morph\", not core htmx alone)",
+        "Recommends hx-swap=\"morph\" or morph:outerHTML or morph:innerHTML as the swap strategy",
+        "Explains that morphing reuses matching DOM nodes to preserve element state/focus",
+        "Does not treat autofocus alone as sufficient without changing the swap strategy"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "head-support-boosted-nav",
+      "prompt": "My SPA-ish app uses hx-boost=\"true\" on <body> with hx-target=\"#main\". Nav links hx-get partials into #main and hx-push-url=\"true\". Each partial my Flask view returns includes a <head> block with a page-specific <title> and an extra <link rel=\"stylesheet\"> for that section. The body content swaps fine but the browser tab title never updates and the page-specific CSS in the partial's <head> is ignored. How do I make htmx process and merge head content from partial responses?",
+      "expected_output": "Load the head-support extension (htmx-ext-head-support), enable hx-ext=\"head-support\" on body or ancestor. Server keeps returning <head>...</head> in partials; extension merges head on boosted requests (exact match kept, new added, missing removed) or appends on non-boosted swaps.",
+      "expectations": [
+        "States that core htmx partial swaps do not merge arbitrary <head> content (title/CSS from partial head are ignored without an extension)",
+        "Uses the head-support extension (loads htmx-ext-head-support AND enables hx-ext=\"head-support\")",
+        "Explains that the server response should include a <head> element with title/stylesheet changes",
+        "Describes boosted vs non-boosted head handling (merge algorithm for boosted vs append for non-boosted), or mentions hx-head=\"merge\"/\"append\"",
+        "Does not recommend only setting document.title via custom JavaScript as the primary solution"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "hx-location-post-redirect",
+      "prompt": "After a successful hx-post=\"/checkout\" on my cart form (hx-target=\"#cart\", hx-swap=\"innerHTML\"), my Django view currently returns HTTP 302 Location: /order/confirmation/123. The browser follows the redirect as a full page navigation — I lose my SPA shell and the hx-boosted layout. I want the user to land on the confirmation content inside #main without a full reload, with the URL bar updated to /order/confirmation/123. What's the correct server response pattern in htmx?",
+      "expected_output": "Do not rely on 302 for htmx-aware client navigation — response headers are not processed on 3xx. Return HTTP 200 with HX-Location: /order/confirmation/123 (or JSON with path/target/swap) so htmx issues an AJAX load like hx-boost and pushes the URL.",
+      "expectations": [
+        "States that htmx does not process response headers (HX-Location, HX-Redirect) on 3xx redirect responses",
+        "Recommends returning HTTP 200 with the HX-Location response header instead of a 302 redirect",
+        "Explains that HX-Location triggers a boosted-style AJAX navigation and updates history",
+        "Mentions optional JSON form of HX-Location with path and target (e.g. target #main) when a specific swap target is needed",
+        "Does not recommend hx-boost=\"false\" or window.location as the primary fix while keeping htmx POST"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "add-contact-triple-oob",
+      "prompt": "Add-contact form: hx-post=\"/contacts\" hx-target=\"#add-form\" hx-swap=\"outerHTML\". On success the server must do three things in ONE response: (1) replace #add-form with a fresh empty form, (2) append the new contact as a <tr> to <tbody id=\"contacts-table\">, and (3) update <span id=\"contact-count\"> in the header. I tried returning all three fragments as siblings but the new <tr> breaks HTML parsing and only the form swaps. What's the correct response shape and hx attributes?",
+      "expected_output": "Main swap is the fresh form for #add-form. Use hx-swap-oob for #contact-count span. Append the new row via <tbody id=\"contacts-table\" hx-swap-oob=\"beforeend\"> with <tr> inside, or wrap the <tr> in <template> for OOB-by-id. All in one HTML response.",
+      "expectations": [
+        "Uses the main response (or primary target swap) to replace #add-form with the reset empty form",
+        "Uses hx-swap-oob on <span id=\"contact-count\"> (or equivalent) to update the header count in the same response",
+        "Appends the new table row via OOB (e.g. tbody hx-swap-oob=\"beforeend:#contacts-table\" containing <tr>, or template-wrapped tr)",
+        "Explains that bare <tr> cannot be a top-level response fragment due to HTML parsing rules",
+        "Delivers all three updates in a single HTTP response without additional client requests"
+      ]
+    }
+  ]
+}
