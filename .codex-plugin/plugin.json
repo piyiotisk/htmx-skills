@@ -19,6 +19,8 @@
     "displayName": "htmx",
     "shortDescription": "Hypermedia-driven UI development with htmx",
     "category": "Development",
+    "logo": "./assets/logo.png",
+    "composerIcon": "./assets/logo.png",
     "defaultPrompt": [
       "Use the htmx skill to add hx-get/hx-post interactions with correct targets and swaps.",
       "Use the htmx skill to review this template for OOB swaps and progressive enhancement."

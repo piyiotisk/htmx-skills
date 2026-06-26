@@ -1,5 +1,9 @@
 # htmx Skills
 
+<p align="center">
+  <img src="assets/lockup-dark.png" alt="htmx skills — hypermedia UI agent skill" width="480">
+</p>
+
 An open-source [Agent Skills](https://agentskills.io) plugin that teaches AI coding agents how to build hypermedia-driven UIs with [htmx](https://htmx.org).
 
 The skill covers `hx-*` attributes, triggers, targets, swaps, out-of-band updates, extensions, security essentials, and ships the full official htmx reference docs under `skills/htmx/references/`.

@@ -9,6 +9,7 @@
   "homepage": "https://github.com/piyiotisk/htmx-skills",
   "repository": "https://github.com/piyiotisk/htmx-skills",
   "license": "MIT",
+  "logo": "assets/logo.png",
   "keywords": [
     "htmx",
     "hypermedia",

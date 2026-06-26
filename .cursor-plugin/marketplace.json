@@ -16,6 +16,7 @@
         "name": "Constantinos Pigiotis"
       },
       "license": "MIT",
+      "logo": "assets/logo.png",
       "keywords": ["htmx", "hypermedia", "html", "frontend"],
       "skills": "./skills/"
     }
