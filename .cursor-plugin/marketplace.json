@@ -11,7 +11,7 @@
       "name": "htmx",
       "source": "./",
       "description": "Build interactive web UIs with htmx — hypermedia attributes, HTML fragment swaps, OOB updates, extensions, and server-driven UI patterns.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": {
         "name": "Constantinos Pigiotis"
       },
