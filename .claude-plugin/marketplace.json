@@ -8,7 +8,7 @@
     {
       "name": "htmx",
       "description": "Build interactive web UIs with htmx by adding hypermedia attributes to HTML and returning HTML fragments from the server.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "source": "./",
       "author": {
         "name": "Constantinos Pigiotis"

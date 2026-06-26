@@ -51,19 +51,45 @@ cp -R htmx-skills/skills/htmx ~/.agents/skills/htmx
 
 In Codex, invoke with `$htmx` or ask the agent to use the htmx skill.
 
-## Usage
+## Example usage
 
-Ask your agent to use the htmx skill when you are:
+### Claude Code
 
-- Adding or reviewing `hx-get`, `hx-post`, `hx-trigger`, `hx-target`, `hx-swap`
-- Designing server endpoints that return HTML fragments
-- Implementing OOB swaps, boosted navigation, SSE/WebSocket extensions
-- Debugging htmx swap or history behavior
+After installing, invoke the skill:
 
-Example prompts:
+```text
+/htmx:htmx
+```
 
-- "Use the htmx skill to add inline edit on this table row."
+Then ask for a specific pattern:
+
+```text
+/htmx:htmx Add debounced live search on this input — hx-get /contacts/search,
+swap results into #results, show a spinner with hx-indicator.
+
+/htmx:htmx Delete button on each table row — hx-delete, closest tr target,
+and OOB-update #contact-count in the same response.
+
+/htmx:htmx Review this template for hx-boost inheritance bugs and missing
+progressive-enhancement fallbacks.
+```
+
+### Cursor / Codex
+
+Mention the skill in chat:
+
+- "Use the htmx skill to add inline edit on this contact card."
+- "Use the htmx skill to wire delete-row + OOB count update."
 - "Review this form for correct `hx-sync` and validation handling."
+
+### What the skill helps with
+
+- `hx-get`, `hx-post`, `hx-trigger`, `hx-target`, `hx-swap`
+- Server endpoints that return HTML fragments (not JSON)
+- OOB swaps, boosted navigation, SSE/WebSocket extensions
+- Debugging swap, history, and attribute-inheritance issues
+
+Full worked examples (HTML + server responses): [`skills/htmx/examples.md`](skills/htmx/examples.md)
 
 ## What's included
 

@@ -23,6 +23,21 @@ htmx lets any element issue an AJAX request on any event using any HTTP verb, an
 
 You can use the `data-hx-*` prefix if you need valid-by-DTD HTML (e.g. `data-hx-post`).
 
+## Example usage
+
+Invoke explicitly when starting htmx work (Claude Code: `/htmx:htmx`).
+
+| Task | Example prompt |
+|------|----------------|
+| Live search | "Add debounced `hx-get` search swapping into `#results`." |
+| Inline edit | "Click Edit replaces this card with a form; Cancel restores it." |
+| Delete + counter | "Delete row with `hx-delete` and OOB-update `#contact-count`." |
+| Validation UX | "422 errors in `#form-errors`, success replaces the form." |
+| Boosted nav | "Boost `#main` links but keep sidebar PDFs as full page loads." |
+| Code review | "Review this template for htmx inheritance and XSS issues." |
+
+For full HTML + server response examples, see [examples.md](examples.md). For pattern recipes, see `references/examples/`.
+
 ## Installing
 
 CDN (fastest start; pin the version, consider self-hosting in production):

@@ -68,3 +68,15 @@ Optional: open a PR to [hashgraph-online/awesome-ai-plugins](https://github.com/
 **Repository:** https://github.com/piyiotisk/htmx-skills  
 **License:** MIT  
 **Keywords:** htmx, hypermedia, html, frontend, hx-get, hx-post, hx-swap
+
+**Example usage:**
+
+```text
+/htmx:htmx Add debounced live search — hx-get /search, swap into #results.
+
+/htmx:htmx Delete table row with hx-delete (closest tr) and OOB-update #count.
+
+/htmx:htmx Review this template for boost inheritance and XSS issues.
+```
+
+See `skills/htmx/examples.md` for full HTML + server response examples.
